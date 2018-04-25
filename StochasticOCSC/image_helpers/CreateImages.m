@@ -47,7 +47,7 @@
 % @retval resI the (image-contrast normalized image) if CONTRAST_NORMALIZE is
 % set.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [I] = CreateImagesJinhui(imgs_path,CONTRAST_NORMALIZE,ZERO_MEAN,COLOR_TYPE,SQUARE_IMAGES,image_frames)
+function [I] = CreateImages(imgs_path,CONTRAST_NORMALIZE,ZERO_MEAN,COLOR_TYPE,SQUARE_IMAGES,image_frames)
 
 % Defaults
 if(nargin<6)
@@ -276,17 +276,7 @@ for i=1:length(I)
                 end
             end
     end
-    %% add by Jinhui to resize images to uniform size
-    [ height, width ] = size( I{i} );
-    if height < width
-        pos = uint16( (width-height)/2 )+1;
-        I{i} = I{i}(1:height, pos:pos+height-1);
-        I{i} = resize( I{i}, 200, 200 );
-    else
-        pos = uint16( (height-width)/2 )+1;
-        I{i} = I{i}( pos:pos+width-1, 1:width );
-        I{i} = resize( I{i}, 200, 200 );
-    end
+    
     %     I{i} = IMG;
 end
 
@@ -731,3 +721,5 @@ fprintf('Not Squaring, just converting all images from cell to matrix...\n')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fprintf('\nAll Images have been loaded and preprocessed.\n\n');
+
+

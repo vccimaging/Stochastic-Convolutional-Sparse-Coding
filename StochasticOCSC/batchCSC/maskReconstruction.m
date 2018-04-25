@@ -33,9 +33,9 @@ M = sparse( 1:numel(ind), ind, 1,  numel(ind),numel(MtM));
 
 % [z, ~] = lasso( M*D, M*(signal_sparse(:)-offset(:)), [], [], [], 0.1, 3, 1.8, 50, 1, 0); 
 % sig_rec = reshape( D*z, size(signal) ) + offset;
-MD = M*D;
-[z, ~] = lasso( MD, M*signal_sparse(:), [], [], [], 0.1, 3, 1.8, 50, 1, 0); 
-sig_rec = reshape( D*z, size(signal) );
+% MD = M*D;
+% [z, ~] = lasso( MD, M*signal_sparse(:), [], [], [], 0.1, 3, 1.8, 50, 1, 0); 
+% sig_rec = reshape( D*z, size(signal) );
 
 tic();
 [z, sig_rec] = sparseReconstruction(signal_sparse,...

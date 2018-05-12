@@ -1,0 +1,86 @@
+\section{Results} \label{sec:result}
+\subsection{Sub-Sampling Strategy}
+We first evaluate the convergence and effectiveness of the proposed sub-sampling strategy, and compare it with state-of-the-art frequency solver~\cite{heide2015fast}. The proposed algorithm, with different sub-sampling factors, was tested on the fruit dataset~\cite{zeiler2010deconvolutional} which contains 10 training images in the size of $100 \times 100$. The dictionary dimension size is set to $11 \times 11 \times 100$.
+
+{\bfseries Convergence.} Comparisons of the convergence between the proposed method and the state-of-the-art are shown in Fig.~\ref{fig:subsampleResult}. A different selection of the subsampling probability reveals that the proposed strategy will slightly influence the convergence and the training objective of the minimization problem. Specifically, the more subsampled, the relatively slower convergence and the higher objective will be obtained. On the other hand, small subsampling rate will significantly accelerate the computation process, where $10\%$ subsampling achieves about $6 \times$ speedup over no subsampled solver and $2 \times$ speedup over state-of-the-art frequency solvers for one iteration. We observe that a subsampling rate between $0.1$ and $0.2$ delivers empirically good enough convergence in our settings, as well as achieving at least $3 \times$ speedup. It should be clarified that for a better representation, the cropped objectives are plotted after the first iteration, while all of them have the same initial objective. Notice that the comparable method has a relatively high objective at first $6-8$ iterations due to different splitting strategies are applied and subproblems are interleaved on the primary variables~\cite{wohlberg2016efficient}, though it converges to a optimum with comparable objective after 10 iterations. In summary, comparing to the state-of-the-art frequency solver, the proposed method with a subsampling rate of $10\%$ not only spends two times less processing time per iteration, but also needs fewer iterations to converge.
+
+\begin{figure}[h]
+\begin{subfigure}{0.6\textwidth}
+  \includegraphics[width=1\linewidth]{figure/iteVSobj.pdf}
+\end{subfigure} 
+\begin{subfigure}{0.3\textwidth}
+  \includegraphics[width=1\linewidth]{figure/batchFruit100.pdf}
+\end{subfigure}
+
+\begin{subfigure}{0.6\textwidth}
+  \includegraphics[width=1\linewidth]{figure/timeVSobj.pdf}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+  \includegraphics[width=1\linewidth]{figure/heideFruit100.pdf}
+\end{subfigure}
+
+\caption{Left: Convergence comparison between the-state-of-art method\cite{heide2015fast} and the proposed method with different subsampling probability. Right: Learned filters by the proposed method with $p=0.1$ and the comparable method. In these represented learned filters, our method learns more Gabor-like and less noise-like filters. Beyond this, it runs faster with regard to each iteration and shows better convergence behavior.}
+\label{fig:subsampleResult}
+\end{figure}
+
+{\bfseries Reconstruction}. The learned filters by the proposed method with subsampling rate $0.1$ are shown on the right hand side of Fig.~\ref{fig:subsampleResult}. For a visual comparison, we also show the filters learned from the competing method. As can be observed, both of them learn some seemingly similar Gabor-like filters. While after zooming, it can be seen that our learned Gabor-like filters have less impure structures. Moreover, the comparable filters contain a number of noise-like dictionaries, which are rarely existed in ours. We then demonstrate the effectiveness of the reconstructed filters in the application of image inpainting, which refers to reconstructing a full image from partial measurements. A numerical comparison of the reconstruction quality is shown in Fig.~\ref{fig:PSNRrecon}. The filters learned by the proposed method not only show more visually decent structures and less specific features, but also demonstrate its capability to better reconstruct partial observed images. In addition to that, the learning process only takes about $40\%$ of the execution time of the comparison.
+
+\begin{figure}[h]
+    \includegraphics[width=1\textwidth]{figure/reconImage.pdf}
+    \\
+    \resizebox{1\linewidth}{!}{
+        \begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}
+            \cline{1-11}
+            Image & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+            \hline
+            PSNR~\cite{heide2015fast} & 25.77 & 24.67 & 24.89 & 23.88 & 24.68 & 25.26  & 24.15 & 25.75 & 22.97 & 26.16 \\
+            \hline
+            PSNR ours & \textbf{25.91} & \textbf{24.72} & \textbf{25.21} & \textbf{24.09} & \textbf{25.00} & \textbf{25.36} & \textbf{24.32} & \textbf{25.80} & \textbf{23.24} & \textbf{26.37} \\
+            \hline
+        \end{tabular} }
+    \caption{Numerical comparisons of the reconstruction quality obtained from the presented filters and its comparison. The reconstructions are performed on $20\%$ randomly observed images, with $\lambda = 0.4$ and $50$ ADMM iterations for both cases. Obtained PSNR values are averaged on 5 trials. Note that none of the testing images are in the training sets.} \label{fig:PSNRrecon}
+\end{figure}
+
+\subsection{Online Learning Settings}
+We further evaluate the online fashion of the proposed method. To begin with, we validate the proposed algorithm on the city dataset~\citep{zeiler2010deconvolutional}, which has 10 training images and 4 testing images, and all of them has the size of $100 \times 100$. Afterwards, over-complete dictionaries are learned from 1000 images randomly picked up from ImageNet~\cite{deng2009imagenet}.
+
+{\bfseries Convergence.} Unlike the batch-based learning approaches, the training loss objective of the entire
+dataset cannot be evaluated since each training step only draws one or a few of the data samples. Otherwise, we can evaluate the learning process on testing images. The loss objectives on testing dataset of the proposed algorithm (SOCSC) and prior published online CSC model solved in frequency domain~\citep{liu-2018-first} (FOCSC), with respect to iterations and time, are shown in Fig.~\ref{fig:onlineConvergence}. The proposed method not only exhibits a better convergence performance, but also takes much less execution time, achieving roughly $5 \times$ speedup for one iteration. A visual comparison of the learned dictionaries also demonstrates that the proposed algorithm delivers better outcomes. Further numerical comparison will be reported in the next section.
+
+\begin{figure}[h]
+\begin{subfigure}{0.45\textwidth}
+  \includegraphics[width=1\linewidth]{figure/iteVSobjOnline.pdf}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+  \includegraphics[width=1\linewidth]{figure/timeVSobjOnline.pdf}
+\end{subfigure}
+
+\caption{}
+\label{fig:onlineConvergence}
+\end{figure}
+
+{\bfseries Over-complete dictionaries.} As far as we know, none of the precedent CSC work reported or analyzed the over-complete dictionary (the number of filters is more than the degrees of freedom). One of the reasons could be that most of the prior work is batch-based approach, thus learning over-complete dictionary from small dataset would cause the overfitting issue, which may contain quite a few data-specific filters, and therefore be short of the generalization ability. The proposed online-based learning strategy can overcome this issue by scaling up to arbitrary sample sizes. 
+
+We demonstrate its capability on 1000 image patches with the size of $100 \times 100$, and learn $11 \times 11 \times 400$ over-complete dictionary, all of which are shown in Fig.~\ref{fig:overCompleteDic} . As a comparison, 100 learned filters by the same algorithm and its comparable approach are also represented for a visual comparison. As can be observed, both of the approaches learn visually similar under-complete dictionaries, while the proposed method shows a $5 \times$ speedup over the other. Furthermore, the learned over-complete dictionary is composed of the gabor-like image features as represented in the under-complete dictionaries, as well as a number of low contrast features which are rarely existed in those under-complete dictionaries. These additional feature information would play an essential role to better represent the natural images, which can be demonstrated in Fig.~ . There is a bottleneck for under-complete dictionary that no more apparent progress could be observed when the number of training images is higher than a specific value for both of the online approaches. However, owing to more abundant filters, learning over-complete dictionary overcomes this bottleneck, and it shows a considerable improvement with regard to PSNR to have a sparse representation of the testing images.
+
+\begin{figure}[h]
+\begin{minipage}{0.4\textwidth}
+\begin{subfigure}{1\textwidth}
+    \centering
+  \includegraphics[width=0.6\linewidth]{figure/liu100-filter.pdf}
+  \vspace*{2mm}
+\end{subfigure}
+
+\begin{subfigure}{1\textwidth}
+    \centering
+  \includegraphics[width=0.6\linewidth]{figure/online100-filter.pdf}
+\end{subfigure}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\centering
+\includegraphics[width=1\linewidth]{figure/online400-filter.pdf}
+\end{minipage}
+
+\caption{Filters learned from 1000 images by the proposed method and its comparison. (a) The under-complete dictionary ($11 \times 11 \times 100$) learned by~\cite{liu-2018-first}; (b) The under-complete dictionary ($11 \times 11 \times 100$) learned by the proposed method. (c) The over-complete dictionary ($11 \times 11 \times 400$) learned by the proposed method. These under-complete dictionaries, mainly composed of gabor-like filters, can be seen as a subset of the represented over-complete dictionary, which also contains a number of low contrast image features.}
+\label{fig:overCompleteDic}
+\end{figure}

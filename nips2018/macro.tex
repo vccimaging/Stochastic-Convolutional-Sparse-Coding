@@ -1,0 +1,34 @@
+\begingroup
+  \catcode`\_=\active
+  \gdef_#1{\ensuremath{\sb{\mathrm{#1}}}}
+\endgroup
+\mathcode`\_=\string"8000
+\catcode`\_=12
+
+\usepackage{xcolor}
+\usepackage{textcomp}
+\definecolor{Gray}{rgb}{0.5,0.5,0.5}
+\definecolor{darkblue}{rgb}{0,0,0.7}
+\definecolor{orange}{rgb}{1,.5,0} % something readable but different from todo
+\definecolor{red}{rgb}{1,0,0} % something readable but different from todo
+\newcommand{\heading}[1]{\noindent\textbf{#1}}
+\newcommand{\note}[1]{{\em{\textcolor{orange}{#1}}}}
+\newcommand{\todo}[1]{{\textcolor{darkblue}{TODO: #1}}}
+\newcommand{\changed}[1]{{\textcolor{blue}{#1}}}
+
+\newcommand{\Matrix}[1]     {{\ensuremath{\mathbf{\uppercase{#1}}}}} %Matrix 
+\newcommand{\Vector}[1]     {{\ensuremath{\mathbf{\lowercase{#1}}}}} %Vector
+\newcommand{\Variable}[1]   {{\ensuremath{\mathrm{\lowercase{#1}}}}} %Scalar
+\newcommand{\Id}            {\mathbb{I}} %Identity matrix
+
+\newcommand{\minimize}[1]   {\underset{{#1}}{\operatorname{argmin}} \: \: } %Minimize w.r.t.
+\newcommand{\subjectto}     {\operatorname{s.t.}}
+
+\newcommand{\signal} {\Vector{x}}
+\newcommand{\filter} {\Vector{d}}
+\newcommand{\code}   {\Vector{z}}
+\newcommand{\Filter} {\Matrix{D}}
+\newcommand{\mask}   {\Matrix{M}}
+\newcommand{\Code}   {\Matrix{z}}
+\newcommand{\surC}   {\Matrix{C}}
+\newcommand{\surB}   {\Matrix{B}}

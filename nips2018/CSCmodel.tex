@@ -1,0 +1,17 @@
+\section{Convolutional Sparse Coding (CSC)}
+Specifically, the CSC problem is trying to minimize
+\begin{equation}
+\begin{split}
+    \minimize{\filter,\code} & \frac{1}{2}\|\signal - \sum_{k=1}^{K} \filter_k * \code_k \|_2^2 + \lambda \sum_{k=1}^{K}\| \code_k \|_1 \\
+    \subjectto & ~ \|\filter_k\|^2_2 \leq 1 ~~ \forall k \in {1,...K},
+\end{split}
+\end{equation}
+where $\signal \in \mathbb{R}^D$ is a D-dimensional signal or a vectorized image~\footnote{In this manuscript, we work on 2D images.}, $\filter_k \in \mathbb{R}^M$ is the k-th dictionary and $\code_k$ is the sparse code associated with that dictionary, and it has the same dimension size as $\signal$. $K$ is the number of dictionary filters, and $*$ is the convolution operator. The above equations will be applied to all the training images.
+
+The modern approaches exploit Parseval's theorem and introduce two slack variables to separate the non-smooth $L_1$ penalty term and the $L_2$ constraints, making it feasible to be efficiently computed in frequency domain, and to apply splitting strategy to formulate the problem into ADMM framework, where the two subproblems (updating $\code$ and updating $\filter$) are jointly solved by coordinate descent. There exists several issues regarding to the model and the frequency solvers.
+
+\begin{itemize}
+  \item Though CSC overcomes the independence assumption held in patch-based learning algorithms, far more variables ($K$ times more), as a payback, will be introduced to represent a single image. This brings in more severe memory and computational burden.
+  \item The reconstructed sparse codes show that in the case of $K=100$, the majority of the entries (more than $99.5\%$) do not provide valid information to the represented image, which indicates the subproblem for updating $\code$ solves a highly sparse LASSO problem. Transforming the problem into frequency domain imposes restriction on the use of optimization strategies for this very specific problem.
+  \item The prior work shows its efficiency of solving the CSC problem in frequency domain, while this is only applicable for updating $\code$, and it does not hold for updating $\filter$. Dictionaries usually have much smaller spatial support than the dimension size of the sparse codes ($M \ll D$), while in order to tackle the problem in frequency domain, it requires to process the $\filter$-subproblem in the same dimensions as the sparse codes, and then project the results onto its small spatial support.
+\end{itemize}

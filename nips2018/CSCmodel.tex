@@ -3,7 +3,7 @@ Specifically, the CSC problem has the form
 \begin{equation}
 \begin{split}
     \minimize{\filter,\code} & \frac{1}{2}\|\signal - \sum_{k=1}^{K} \filter_k * \code_k \|_2^2 + \lambda \sum_{k=1}^{K}\| \code_k \|_1 \\
-    \text{subjec to} & ~ \|\filter_k\|^2_2 \leq 1 ~~ \forall k \in \{1,\dots,K\},
+    \text{subject to} & ~ \|\filter_k\|^2_2 \leq 1 ~~ \forall k \in \{1,\dots,K\},
 \end{split}
 \end{equation}
 where $\signal \in \mathbb{R}^D$ is a $D$-dimensional signal or a vectorized image\footnote{In this manuscript, we work on 2D images.}, $\filter_k \in \mathbb{R}^M$ is the $k$-th dictionary, $\code_k\in \mathbb{R}^D$ is the sparse code associated with that dictionary,  $\lambda>0$ is a sparsity inducing penalty parameter, $K$ is the number of dictionary filters, and $*$ is the convolution operator. The above model will be applied to all the training images.

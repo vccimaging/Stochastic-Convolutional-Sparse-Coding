@@ -1,0 +1,87 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+
+\usepackage{caption}
+\captionsetup[table]{position=bottom}
+
+\usepackage{array}
+\usepackage{epstopdf}
+\usepackage{cuted}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+% \cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+
+\input{macro}
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Stochastic Convolutional Sparse Coding}
+
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+The minimization problems formulated in Convolutional Sparse Coding (CSC) have been solved in frequency domain by modern approaches owing to the improved computing efficiency. However, solving the problem in frequency domain automatically assumes circular boundary conditions, and also it is restricted by imposing modern optimization strategies for this specific problem. In this work, we propose a novel stochastic spatial-domain solver where a randomized subsampling strategy is introduced in the subproblem of computing sparse codes. Afterwards, we extend the proposed strategy in conjunction with online learning, scaling the CSC model up to arbitrary sample sizes. In both cases, we show experimentally that the proposed method outperforms the state-of-the-art frequency-domain solvers with a reasonable selection of the subsampling rate. At last, we learn the over-complete dictionary from large-scale datasets, which demonstrates a better sparse representation of the natural images on account of more abundant learned image features.
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+\input{Introduction}
+
+\input{CSCmodel}
+
+\input{SCSCmodel}
+
+\input{Results}
+
+\input{Conclusion}
+
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
+
+\clearpage
+\appendix
+
+\input{supplement}
+
+\end{document}

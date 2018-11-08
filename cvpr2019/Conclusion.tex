@@ -1,4 +1,42 @@
 \section{Conclusions}
-In this work, we present a novel stochastic subsampling strategy for solving the CSC problem in spatial domain. This method significantly improves the runtime performance over the prior frequency-domain solvers, which applies to both batch mode and online-learning mode, as well as generating effective and proven outcomes. The proposed algorithm, for the first time, demonstrates the feasibility that tackling the CSC problem in spatial domain while still holding, or even improving the runtime efficiency. Since the subproblem of updating the code is a highly sparse LASSO, other specific optimization strategies can be applied to further accelerate the computation, for instance the idea proposed in~\cite{johnson2017stingycd}, which solves the LASSO problem by coordinate descent and skips unnecessary updates using the method of safe screening~\cite{ghaoui2012Swfe}. It would be worthy to emphasize that transforming the problem into Fourier domain cannot benefit from these kinds of speedup strategies (including the proposed one). Furthermore, instead of employing uniform subsampling strategy, alternative subsampling strategies can be studied in the future for a gain of learning efficiency, for instance an importance or correlation based sampling strategy which considers the dependency relationship between the signals and the sparse codes.
+In this work, we present a novel stochastic subsampling strategy for
+solving the CSC problem in the spatial domain. This method
+significantly improves the runtime performance over the prior
+frequency-domain solvers, which applies to both batch mode and
+online-learning mode.  The proposed algorithm, for the first time,
+demonstrates the feasibility that tackling the CSC problem in spatial
+domain while still holding, or even improving the runtime
+efficiency. Since the subproblem of updating the code is a highly
+sparse LASSO, other specific optimization strategies can be applied to
+further accelerate the computation, for instance the idea proposed
+in~\cite{johnson2017stingycd}, which solves the LASSO problem by
+coordinate descent and skips unnecessary updates using the method of
+safe screening~\cite{ghaoui2012Swfe}. It is worth emphasizing that
+Fourier-domain methods cannot benefit from these kinds of speedup
+strategies.
 
-We have also shown the capability of the developed online algorithm to learn representative and meaningful over-complete dictionary from arbitrary large datasets, and the availability of the dictionary is further verified by the application of image inpainting. It can be foreseen that this capability has widespread applications in the audio and image related tasks, and higher dimensional signal processing. The source code for SBCSC and SOCSC is attached in the supplement for reference. 
+In the future, alternative subsampling strategies can be studied to
+improve learning efficiency. Instead of employing uniform subsampling
+strategy, for instance one could employ an importance or correlation
+based sampling strategy that considers the inter-dependency between the
+signals and the sparse codes.
+
+We have also shown the capability of the developed online algorithm to
+learn representative and meaningful over-complete dictionary from
+arbitrary large datasets, and the availability of the dictionary is
+further verified by the application of image inpainting. It can be
+foreseen that this capability has widespread applications in audio
+and image related tasks, and higher dimensional signal processing. The
+source code for SBCSC and SOCSC is attached in the supplement for
+reference.
+\note{Do you really mean source code (as in full matlab code), or just
+  the pseudo-code?}
+
+
+% --- DO NOT DELETE ---
+% Local Variables:
+% mode: latex
+% mode: flyspell
+% mode: TeX-PDF
+% End:
+

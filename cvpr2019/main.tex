@@ -60,7 +60,33 @@ First line of institution2 address\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-The minimization problems formulated in Convolutional Sparse Coding (CSC) have been solved in frequency domain by modern approaches owing to the improved computing efficiency. However, solving the problem in frequency domain automatically assumes circular boundary conditions, and also it is restricted by imposing modern optimization strategies for this specific problem. In this work, we propose a novel stochastic spatial-domain solver, in which a randomized subsampling strategy is introduced in the subproblem of computing sparse codes. Afterwards, we extend the proposed strategy in conjunction with online learning, scaling the CSC model up to arbitrary sample sizes. In both cases, we show experimentally that the proposed method, with a reasonable selection of the subsampling rate, outperforms the state-of-the-art frequency-domain solvers in terms of execution time without losing the learning quality. At last, we evaluate the effectiveness of the over-complete dictionary learned from large-scale datasets that has not been studied by precedent CSC work, which demonstrates an improved sparse representation of the natural images on account of more abundant learned image features.
+  State-of-the-art methods for Convolutional Sparse Coding usually
+  employ Fourier-domain solvers in order to speed up the convolution
+  operators. However, this approach is not without shortcomings. For
+  example, Fourier-domain representations implicitly assume circular
+  boundary conditions and make it hard to fully exploit the sparsity
+  of the problem as well as the small spatial support of the filters.
+  
+  %% The minimization problems formulated in                               %%
+  %% (CSC) have been solved in frequency domain by modern approaches owing %%
+  %% to the improved computing efficiency. However, solving the problem in %%
+  %% frequency domain automatically assumes circular boundary conditions,  %%
+  %% and also it is restricted by imposing modern optimization strategies  %%
+  %% for this specific problem.                                            %%
+
+  In this work, we propose a novel stochastic spatial-domain solver,
+  in which a randomized subsampling strategy is introduced during the
+  learning sparse codes. Afterwards, we extend the proposed strategy
+  in conjunction with online learning, scaling the CSC model up to
+  very large sample sizes. In both cases, we show experimentally that
+  the proposed subsampling strategy, with a reasonable selection of
+  the subsampling rate, outperforms the state-of-the-art
+  frequency-domain solvers in terms of execution time without losing
+  the learning quality. Finally, we evaluate the effectiveness of the
+  over-complete dictionary learned from large-scale datasets that has
+  not been studied by precedent CSC work, which demonstrates an
+  improved sparse representation of the natural images on account of
+  more abundant learned image features.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -85,3 +111,13 @@ The minimization problems formulated in Convolutional Sparse Coding (CSC) have b
 \input{supplement}
 
 \end{document}
+
+
+
+% --- DO NOT DELETE ---
+% Local Variables:
+% mode: latex
+% mode: flyspell
+% mode: TeX-PDF
+% End:
+

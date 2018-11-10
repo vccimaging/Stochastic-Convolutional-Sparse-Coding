@@ -9,18 +9,18 @@
 
 Based on the strong sparsity of the codes $\code$, we propose to
 implement the CSC learning problem~\eqref{eq:CSCmodel} iteratively,
-where in each iteration we only consider a random subset
-$\mathcal{M}_k(\code_k)$ of the codes:
+where at $\ite$-th iteration we only consider a random subset
+$\mathcal{M}_k^{\ite}(\code_k)$ of the codes:
 \begin{align}
-    &\mini{\filter,\code}  \frac{1}{2}\|\signal - \sum_{k=1}^{K} \filter_k * \mathcal{M}_k(\code_k) \|_2^2 + \lambda \sum_{k=1}^{K}\| \mathcal{M}_k(\code_k) \|_1  \nonumber \\
+    &\mini{\filter,\code}  \frac{1}{2}\|\signal - \sum_{k=1}^{K} \filter_k * \mathcal{M}_k^{\ite}(\code_k) \|_2^2 + \lambda \sum_{k=1}^{K}\| \mathcal{M}_k^{\ite}(\code_k) \|_1  \nonumber \\
     &\text{subject to} ~ \|\filter_k\|^2_2 \leq 1 ~~ \forall k \in \{1,\dots,K\}.
 \end{align}
 \todo{add outer loop variable}
 \todo{There are some notational issues here -- convolution with an
   irregularly subsampled signal! Lets discuss on Sunday.}
-Here $\mathcal{M}_k(\code_k)$ is the operation to subsample the
+Here $\mathcal{M}_k^{\ite}(\code_k)$ is the operation to subsample the
 corresponding code $\code_k$ following a Bernoulli distribution with
-probability $p$.
+probability $p$, drawn at current iteration.
 %The probability value $p$ controls the percentage of
 %the sparse codes that will be considered by the solver.
 In the case of $p=1$, the proposed model is identical with the
@@ -33,43 +33,43 @@ subproblems of $\mathcal{M}(\code)$ and $\filter$, to solve the above
 bi-convex optimization problem. Specifically, the modified
 minimization problem for $\code$ can be formulated as:
 \begin{equation} \label{eq:updatingCode}
-    \code_{opt} = \minimize{\code} \frac{1}{2}\|\signal - (\Filter \mask^\top)(\mask \code) \|_2^2 + \lambda \|\mask \code\|_1,
+    \code^{\ite} = \minimize{\code} \frac{1}{2}\|\signal - (\Filter^{\ite-1} (\mask^{\ite})^\top) (\mask^{\ite} \code) \|_2^2 + \lambda \|\mask^{\ite} \code\|_1,
 \end{equation}
 \todo{add outer loop variable}
-where $\Filter = [\Filter_1, \dots, \Filter_K] \in \mathbb{R}^{D
-  \times DK}$, $\code = [\code_1, \dots, \code_K] \in
+where $\Filter^{\ite-1} = [\Filter_1^{\ite-1}, \dots, \Filter_K^{\ite-1}] \in \mathbb{R}^{D
+  \times DK}$, which is constructed from the dictionary learned by
+$(\ite-1)$-th iteration, $\code = [\code_1, \dots, \code_K] \in
 \mathbb{R}^{DK}$. The convolution operators are expressed as a matrix
 multiplication so that $ \Filter \code = \sum_{k=1}^{K} \filter_k *
 \code_k$. Therefore, each part of $\Filter$ is a Toeplitz
-matrix. Matrix $\mask$ is a $\mathbb{R}^{pDk \times DK}$ random
+matrix. Matrix $\mask^{\ite}$ is a $\mathbb{R}^{pDk \times DK}$ random
 diagonal matrix with $1$ for the entries corresponding to the sampled
 sparse codes and $0$ elsewhere, performing the function of
-$\mathcal{M}(\code)$. Matrix $\mask$ will be redrawn at each
-iteration. It is worth stressing that $(\Filter \mask^\top)$ is not
+$\mathcal{M}^{\ite}(\code)$. Matrix $\mask^{\ite}$ will be redrawn at each
+iteration. It is worth stressing that $(\Filter^{\ite-1} (\mask^{\ite})^\top)$ is not
 performing a subsampling operation on the dictionary, \note{not sure
-  what this is supposed to say:} which is
-essentially to remove the columns in $\Filter$ those are filtered out
-by $\mathcal{M}(\code)$.
+  what this is supposed to say:} which aims to remove the columns in $\Filter^{\ite}$ those are filtered out
+by $\mathcal{M}^{\ite}(\code)$.
 \note{See notation issue above; we need to discuss this next week:}
 Due to the introduced subsampling matrix, the
 convolution operator cannot be implemented in the Fourier
-domain. However, due to the subsampling 
+domain. However, due to the subsampling
 strategy, the number of variables that need to be computed for this
 subproblem is $pDK$ instead of $DK$, which leads to a reduction
 of the spatial-domain computation time by a factor of $\frac{1}{p}$.
 
-After obtaining the subsampled sparse codes, we can then project them
+After computing the subsampled sparse codes $\mathcal{M}^{\ite}(\code)$, we can then project them
 onto the original spatial support by substituting $0$ for the
-masked-out vlaues. Afterwards, the dictionary can be updated by:
+masked-out values, obtaining $z^{\ite}$. Afterwards, the dictionary can be updated by:
 \begin{equation} \label{eq:updatingFilter}
 \begin{split}
-   & \filter_{opt} = \minimize{\filter} \frac{1}{2}\|\signal - \Code \filter \|_2^2 \\
+   & \filter^{\ite} = \minimize{\filter} \frac{1}{2}\|\signal - \Code^{\ite} \filter \|_2^2 \\
    & \text{subject to}  ~ \|\filter_k\|^2_2 \leq 1 ~ \forall k \in \{1,\dots,K\},
 \end{split}
 \end{equation}
-\todo{add outer loop variable} where $\Code= [\Code_1, \dots, \Code_K]
+\todo{add outer loop variable} where $\Code^{\ite}= [\Code_1^{\ite}, \dots, \Code_K^{\ite}]
 \in \mathbb{R}^{D \times MK}$ is a concatenation of Toeplitz matrices,
-and $\Code_k$ is constructed from the associated $\code_k$, $\filter=
+and $\Code_k^{\ite}$ is constructed from the associated $\code_k^{\ite}$, $\filter=
 [\filter_1,\dots,\filter_K] \in \mathbb{R}^{MK}$ such that $ \Code
 \filter = \sum_{k=1}^{K} \filter_k * \code_k$. In typical CSC
 settings, $M \ll D$, hence there is no need to perform subsampling on
@@ -108,8 +108,8 @@ variant (stochastic online CSC).
 \subsection{Stochastic Batch CSC (SBCSC)}
 We first introduce a batch-mode version of the proposed method as
 shown in Algorithm~\ref{algo:SBCSC}, where $N$ is the number of total
-input images, $\code^i$ is the sparse code associated with $i$-th
-image, and $p$ is the uniform probability for one code been
+input images, $(\code^i)^{\ite}$ is the sparse code associated with $i$-th
+image at $\ite$-th iteration, and $p$ is the uniform probability for one code been
 selected. We choose $p=\{1, 0.5, 0.2, 0.1, 0.05\}$ for testing in this
 work, where $p=1$ indicates no subsampling, and $p=0.05$ indicates a
 subsampling rate of $5\%$.
@@ -117,13 +117,14 @@ subsampling rate of $5\%$.
 \begin{algorithm}[H]
 \caption{SBCSC} \label{algo:SBCSC}
 \begin{algorithmic}[1]
-\State $\text{Initialize } \filter, ~p$
+\State $\text{Initialize}  ~ \ite=0, ~\filter^t, ~p$
 \While {not converge}
-    \State $ \text{Randomly sample }\code \text{ with rate } p $
+    \State $\ite \gets \ite+1$
+    \State $ \text{Randomly sample }\code^{\ite} \text{ with rate } p $
     \For{i=1 to N}
-        \State $ \text{Update } \code^i \text{ by solving problem~(\ref{eq:updatingCode}})$
+        \State $ \text{Compute } (\code^i)^{\ite} \text{ by solving problem~(\ref{eq:updatingCode}})$
     \EndFor
-    \State $\text{Update } \filter \text{ by solving problem~(\ref{eq:updatingFilter}})$
+    \State $\text{Compute } \filter^{\ite} \text{ by solving problem~(\ref{eq:updatingFilter}})$
 \EndWhile
 \end{algorithmic}
 \end{algorithm}
@@ -160,6 +161,23 @@ dynamically changing training data.
 
 
 \subsection{Stochastic Online CSC (SOCSC)}
+
+\begin{algorithm}[H]
+\caption{SOCSC} \label{algo:SOCSC}
+\begin{algorithmic}[1]
+\State $\text{Initialize} ~ t=0, ~\filter^t, ~p, ~\surC^t = 0, ~\surB^t = 0$
+\While {not converge}
+    \State $t \gets t+1$
+    \State $ \text{draw } \signal^t \text{ from training images} $
+    \State $ \text{Randomly sample }\code^t \text{ with rate } p $
+    \State $ \text{Compute } \code^t \text{ by solving problem~(\ref{eq:updatingCodeOnline}) using } \filter^{t-1}$
+    \State Compute $\surC^t$ and $\surB^t$ by Eq.~\ref{eq:updateSur}
+    \State Compute $\filter^t$ by solving problem~(\ref{eq:updatingFilterOnline})
+\EndWhile
+\end{algorithmic}
+\todo{Find the best place for this algorithm (probably higher up)}
+\end{algorithm}
+
 In order to address this scalability issue, we can tackle the
 Stochastic CSC problem in an online fashion. In the online learning
 setting as shown in Algorithm~\ref{algo:SOCSC}, each iteration only
@@ -168,15 +186,13 @@ the complexity per loop is independent of the training sample
 size. Then, given the sampled image $\signal^t$ at $t$-th iteration,
 we can compute the corresponding subsampled sparse codes $\code^t$ by
 \begin{equation} \label{eq:updatingCodeOnline}
-    \code^t = \minimize{\code} \frac{1}{2}\|\signal^t - (\Filter^{t-1} (\mask^t)^\top)(\mask^t \code) \|_2^2 + \lambda \|\mask^t \code\|_1,
+    \code^t = \minimize{\code} \frac{1}{2}\|\signal^t - (\Filter^{t-1} (\mask^t)^\top)(\mask^t \code) \|_2^2 + \lambda \|\mask^t \code\|_1.
 \end{equation}
 \note{Here we have $t$ as an iteration variable now -- I don't think
   this is a good choice ($t$ is usually reserved for continuous
   values, better would be $i$ or $j$, and we need to introduce these
   earlier in the paper.}
-where $\Filter^{t-1}$ is constructed from the dictionary learned by
-$(t-1)$th iteration, and $\mask^t$ is the subsample matrix at current
-iteration, which is iteratively redrawn as in SBCSC. After obtaining
+The only difference between Eq. ~\ref{eq:updatingCode} is that $\signal^t$ only contains a portion of the total images. After obtaining
 the sparse codes, the dictionary is updated by:
 \begin{equation}
 \begin{split}
@@ -208,22 +224,6 @@ by solving
 Problem~\eqref{eq:updatingCodeOnline} and
 problem~\eqref{eq:updatingFilterOnline} are solved in the same way as
 that for SBCSC.
-
-\begin{algorithm}[H]
-\caption{SOCSC} \label{algo:SOCSC}
-\begin{algorithmic}[1]
-\State $\text{Initialize} ~ t=0, ~\filter^t, ~p, ~\surC^t = 0, ~\surB^t = 0$
-\While {not converge}
-    \State $t \gets t+1$
-    \State $ \text{draw } \signal^t \text{ from training images} $
-    \State $ \text{Randomly sample }\code^t \text{ with rate } p $
-    \State $ \text{Compute } \code^t \text{ by solving problem~(\ref{eq:updatingCodeOnline}) using } \filter^{t-1}$
-    \State Compute $\surC^t$ and $\surB^t$ by Eq.~\ref{eq:updateSur}
-    \State Compute $\filter^t$ by solving problem~(\ref{eq:updatingFilterOnline})
-\EndWhile
-\end{algorithmic}
-\todo{Find the best place for this algorithm (probably higher up)}
-\end{algorithm}
 
 \subsection{Complexity Analysis}
 Recall that $D$ is the number of pixels for a single image, $K$ is the

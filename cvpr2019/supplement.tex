@@ -114,7 +114,7 @@ In order to show the robustness of the proposed algorithms, We also conduct expe
 \label{fig:subsampleResult-city}
 \end{figure*}
 
-We then compare SOCSC with the state-of-the-art online algorithm~\cite{liu-2018-first} on city dataset, the results of which are shown in Fig.\ \ref{fig:onlineSmall-city}. Similar to the results presented in Fig.\ \ref{fig:onlineSmall}, our method obtains comparable outcomes, meanwhile, achieves roughly $5 \times$ speedup.
+We then compare SOCSC with the state-of-the-art online algorithm~\cite{liu-2018-first} on city dataset, the results of which are shown in Fig.\ \ref{fig:onlineSmall-city}. Similar to the results presented in Fig.\ \ref{fig:onlineSmall}, our method obtains comparable outcomes, meanwhile, achieves roughly $6 \times$ speedup.
 
 \section{Over-complete Dictionary and Large Datasets}
 In this section, we verify the importance of a large dataset when learning the over-complete dictionary. in Fig.~\ref{fig:overCompleteDic-dataset}, we show a visual and quantitative comparisons between the over-complete dictionaries respectively learned by batch-mode algorithm on small dataset (the fruit dataset) and online-mode algorithm on large dataset (1000 images). Most of the filters learned from small dataset have poor structures and reveal very limited representative ability. The numerical results also demonstrate that it even shows a degraded reconstruction performance compared to the under-complete dictionary. Owing to plentiful training samples, our over-complete dictionary not only shows visually decent structures and more representative image features, but also leads to a significant improvement on image reconstruction. Based on all experimental results, it implies that the number of filters and number of training samples are both essential in the CSC model, therefore, the proposed algorithm has prominent advantages over the existing approaches.
@@ -142,4 +142,4 @@ In this section, we verify the importance of a large dataset when learning the o
         \end{tabular} }
   \caption{ Visual and numerical comparisons between the learned over-complete dictionaries by batch-mode algorithm and by online-mode algorithm. Top: Over-complete dictionary learned by batch CSC model~\cite{heide2015fast} on small dataset, and proposed online CSC model (SOCSC) on large dataset. Bottom: Respective reconstruction quality for these two over-complete dictionaries.}
   \label{fig:overCompleteDic-dataset}
-\end{figure*}
+\end{figure*} 

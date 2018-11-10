@@ -25,7 +25,7 @@ feature, which the convolutional nature of CSC avoids.
 %% dictionary learned from CSC achieves signal global coherence, tending %%
 %% to be more representative.                                            %%
 
-Of course this convolutional approach is also a the heart of many deep
+Of course this convolutional approach is also the heart of many deep
 learning-based methods in the form of
 CNNs~\cite{lecun1998gradient,kavukcuoglu2010learning,krizhevsky2012imagenet},
 which have in recent years been extraordinarily successful for a broad
@@ -43,7 +43,7 @@ exploiting Parseval's theorem to express the spatial convolution by
 multiplication in the frequency domain and using proximal solver such
 as Alternating Direction Method of Multipliers
 (ADMM)~\cite{boyd2011distributed} to separate the linear least squares
-parts terms from the non-smooth terms in the optimization
+parts from the non-smooth terms in the optimization
 problem. These approaches show tremendous improvements over prior
 spatial-domain solvers with respect to running
 time~\cite{bristow2013fast,heide2015fast,wohlberg2016efficient,choudhury2017consensus}. Most
@@ -81,7 +81,7 @@ model and solve the entire problems in spatial domain. We demonstrate
 that the proposed stochastic spatial-domain solver, with a reasonably
 selected subsampling rate, outperforms the state-of-the-art
 frequency-domain solvers with regard to computing efficiency. We then
-formulate an online-learning version of the proposed algorithm, and 
+formulate an online-learning version of the proposed algorithm, and
 show dramatic runtime improvement over current online CSC methods,
 while producing comparable outcomes. Finally, we demonstrate the
 capability to learn the over-complete dictionary from thousands of

@@ -1,5 +1,5 @@
 %% first code for CSC in spatial domain
-function [ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
+function [ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, hit_rate, lambda)
 
     k = kernel_size(1);           
     num_kernel  = kernel_size(end);
@@ -17,23 +17,23 @@ function [ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
     d = d(:);
     
     %% parameters
-    outer_ite = 10;
-    max_it_z = 10;
-    max_it_d = 10;
+    outer_ite = 12;
+    max_ite_z  = 10;
+    bcd_ite    = 1;
     
-    batch_size = num_image;   
-    rho_d = 50*lambda;
-    rho_z = 10*lambda;
-    hit_rate = 0.1;    % probability for choosing one specific code 
+    batch_size = num_image;        
+    
+    % rho_z needs to be propoerly chosen for better convergence
+    rho_z = 10;
+    if( hit_rate == 1 )
+        rho_z = 15;
+    end
+    
     total_time = 0;
+    z          = zeros( n*n*num_kernel, batch_size );
+    cur_image  = 1:num_image; 
     
-    u_d     = zeros( k*k*num_kernel, 1 );
-    x_hat_d = zeros( k*k*num_kernel, 1 );
-    z       = zeros( n*n*num_kernel, batch_size );
-
-    cur_image = 1:num_image; 
     for ite = 1:outer_ite
-
         %% compute codes
         t_train = tic;
         
@@ -44,9 +44,9 @@ function [ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
         [ind1, ind2, v] = find( d_ind(:,ind) );
         D = sparse( ind1, ind2, d(v), n*n, numel(ind) );
         
-        z_tmp = lasso(D, b(:,cur_image), lambda, rho_z, 1.8, max_it_z, 1);
+        z_tmp = lasso(D, b(:,cur_image), lambda, rho_z, 1.8, max_ite_z, 1);
         
-        % project the results onto its original domain
+        % project the results onto its original spatial support
         z = zeros(n*n*num_kernel, batch_size);
         z(ind,:) = z_tmp;
         
@@ -54,14 +54,14 @@ function [ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
         Z = constructZ( z, z_ind, n, batch_size, k, num_kernel );
                  
         d_old = d;
-        d = l2proj(Z, b(:), d_old, rho_d, 1.8, k*k, num_kernel, max_it_d);
-    
-        fprintf('ite: %3d - dictionary updates: %10.4f\n', ite, norm( d-d_old ) );
+        d = BCDproj( Z, b(:), d_old, k*k, num_kernel, bcd_ite );
+        
         total_time = total_time + toc(t_train);
+        fprintf('ite: %3d ---- objective: %3.5e\n', ite, norm( Z*d-b(:) ).^2/2 + lambda*norm(z(:),1) );        
     end
     
-    save(sprintf('../filters/d_batch%3d_P%1.1f.mat',...
-         num_kernel, hit_rate ), 'd');    
+%     save(sprintf('../filters/d_batch%3d_P%1.1f.mat',...
+%          num_kernel, hit_rate ), 'd');    
     fprintf( 'total executioin time: %10.4f\n', total_time );
 return;
 

@@ -1,25 +1,32 @@
 addpath('../image_helpers');
-CONTRAST_NORMALIZE = 'local_cn'; 
-ZERO_MEAN = 1;   
-COLOR_IMAGES = 'gray'; 
 
-% read images
-% we suggest to work on 100*100 (square) image patches (avoid working on large images and
+%% read images
+% we suggest to work on square image patches (avoid working on large images and
 % large number of filters at the same time)
-[b] = CreateImages('../datasets/city_100_100',CONTRAST_NORMALIZE,ZERO_MEAN,COLOR_IMAGES); % Replace directory with large image data directory.
-b = reshape(b, size(b,1), size(b,2), [] );
+
+% CONTRAST_NORMALIZE = 'local_cn'; 
+% ZERO_MEAN = 1;   
+% COLOR_IMAGES = 'gray'; 
+% [b] = CreateImages('../datasets/fruit_100_100',CONTRAST_NORMALIZE,ZERO_MEAN,COLOR_IMAGES);
+% b = reshape(b, size(b,1), size(b,2), [] );
+
+load city;
+% load fruit;
 
 %% Define the parameters
 kernel_size = [11, 11, 100];
-lambda = 1;
+lambda = 1;        % different normalize methods may lead to different lambda and rho
+hit_rate = 0.1;    % probability for choosing one specific code
 
 %% cache the vector to matrix info for efficient indexing
-% It may take some time (roughly 40s), while you only need to compute it once and store it
-d_ind = constructDicIndex(  kernel_size, size(b,1), size(b,2) );
-z_ind = constructCodeIndex( kernel_size, size(b,1) );
+% It may take some time (roughly 30s), while you only need to compute it once and store it
+
+% d_ind = constructDicIndex(  kernel_size, size(b,1), size(b,2) );
+% z_ind = constructCodeIndex( kernel_size, size(b,1) );
+load d_ind; load z_ind;
 
 %% Batch stochastic CSC
-[ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, lambda);
+[ d, z ]  = BatchStochasticCSC(b, d_ind, z_ind, kernel_size, hit_rate, lambda);
 
 %% visualize dictionary
 plotDic( d, 10, max(d(:)), min(d(:)) );

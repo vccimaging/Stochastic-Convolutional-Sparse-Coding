@@ -1,5 +1,5 @@
 %% online code for CSC in spatial domain
-function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
+function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, hit_rate, lambda)
 
     k = kernel_size(1);           
     num_kernel  = kernel_size(end);
@@ -17,14 +17,12 @@ function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
     d = d(:);
     
     %% set up parameters
-    outer_ite = 10;  % num_image;
-    max_it_z = 10;
-    max_it_d = 10;
+    outer_ite = num_image;
+    max_ite_z = 10;
+    bcd_ite    = 1;
     
     batch_size = 1;
-    rho_d = 50*lambda;
-    rho_z = 10*lambda;
-    hit_rate = 0.1;    % probability for choosing one specific code 
+    rho_z = 10;
     gamma = 1;         % forget factor
     total_time = 0;
     
@@ -32,7 +30,6 @@ function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
     sequence = randperm(outer_ite*batch_size);
     
     for ite = 1:outer_ite
-
         %% compute sparse codes
         t_train = tic;
         
@@ -45,13 +42,13 @@ function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
         [ind1, ind2, v] = find( d_ind(:,ind) );        
         D = sparse( ind1, ind2, d(v), n*n, numel(ind) );
         
-        % if batch_size is large, use Cholesky decomposition
-        % otherwise use conjugate gradient.
-        % this is important for an efficient compute especially when
+        % if batch_size is large, use Cholesky decomposition (1)
+        % otherwise use conjugate gradient (2).
+        % this is essential for an efficient computation especially when
         % batch_size is large.
-        z_tmp = lasso(D, b(:,cur_image), lambda, rho_z, 1.8, max_it_z, 2);
+        z_tmp = lasso(D, b(:,cur_image), lambda, rho_z, 1.8, max_ite_z, 2);
         
-        % project the results onto its original domain
+        % project the results onto its original spatial support
         z = zeros(n*n*num_kernel, batch_size);
         z(ind,:) = z_tmp;
         
@@ -71,8 +68,8 @@ function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
         end
         
         d_old = d;
-        d = dicUpdate(C, B, d_old, rho_d, 1.8, k*k, num_kernel, max_it_d);
-        fprintf('ite: %3d - dictionary updates: %10.4f\n', ite, norm( d-d_old ) );
+        d = BCDdicUpdate(C, B, d_old, k*k, num_kernel, bcd_ite);
+        fprintf('ite: %3d ----- dictionary updates: %10.4f\n', ite, norm( d-d_old ) );
         
         B_old = B;
         C_old = C;
@@ -80,8 +77,8 @@ function [ d, z ]  = OnlineStochasticCSC(b, d_ind, z_ind, kernel_size, lambda)
         total_time = total_time + toc(t_train);
     end
     
-    save(sprintf('../filters/d_mini%2d_online%3d_P%1.1f.mat', ...
-        batch_size, num_kernel, hit_rate ), 'd');
+%    save(sprintf('../filters/d_mini%2d_online%3d_P%1.1f.mat', ...
+%        batch_size, num_kernel, hit_rate ), 'd');
     fprintf( 'total executioin time: %10.4f\n', total_time );   
 return;
 

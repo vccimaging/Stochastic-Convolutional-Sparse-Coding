@@ -1,0 +1,182 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{bibi2017high}
+A.~Bibi and B.~Ghanem.
+\newblock High order tensor formulation for convolutional sparse coding.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 1772--1780, 2017.
+
+\bibitem{bottou1998online}
+L.~Bottou.
+\newblock Online learning and stochastic approximations.
+\newblock {\em On-line learning in neural networks}, 17(9):142, 1998.
+
+\bibitem{bousquet2008tradeoffs}
+O.~Bousquet and L.~Bottou.
+\newblock The tradeoffs of large scale learning.
+\newblock In {\em Advances in neural information processing systems}, pages
+  161--168, 2008.
+
+\bibitem{boyd2011distributed}
+S.~Boyd, N.~Parikh, E.~Chu, B.~Peleato, J.~Eckstein, et~al.
+\newblock Distributed optimization and statistical learning via the alternating
+  direction method of multipliers.
+\newblock {\em Foundations and Trends{\textregistered} in Machine learning},
+  3(1):1--122, 2011.
+
+\bibitem{bristow2013fast}
+H.~Bristow, A.~Eriksson, and S.~Lucey.
+\newblock Fast convolutional sparse coding.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2013 IEEE
+  Conference on}, pages 391--398. IEEE, 2013.
+
+\bibitem{choudhury2017consensus}
+B.~Choudhury, R.~Swanson, F.~Heide, G.~Wetzstein, and W.~Heidrich.
+\newblock Consensus convolutional sparse coding.
+\newblock In {\em Computer Vision (ICCV), 2017 IEEE International Conference
+  on}, pages 4290--4298. IEEE, 2017.
+
+\bibitem{deng2009imagenet}
+J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, and L.~Fei-Fei.
+\newblock Imagenet: A large-scale hierarchical image database.
+\newblock In {\em Computer Vision and Pattern Recognition, 2009. CVPR 2009.
+  IEEE Conference on}, pages 248--255. IEEE, 2009.
+
+\bibitem{ghaoui2012Swfe}
+L.~E. Ghaoui, V.~Viallon, and T.~Rabbani.
+\newblock Safe feature elimination for the lasso and sparse supervised learning
+  problems.
+\newblock In {\em Pacific Journal of Optimization}, page 8(4):667–698, 2012.
+
+\bibitem{gu2015convolutional}
+S.~Gu, W.~Zuo, Q.~Xie, D.~Meng, X.~Feng, and L.~Zhang.
+\newblock Convolutional sparse coding for image super-resolution.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision}, pages 1823--1831, 2015.
+
+\bibitem{heide2015fast}
+F.~Heide, W.~Heidrich, and G.~Wetzstein.
+\newblock Fast and flexible convolutional sparse coding.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 5135--5143, 2015.
+
+\bibitem{jas2017learning}
+M.~Jas, T.~D. La~Tour, U.~Simsekli, and A.~Gramfort.
+\newblock Learning the morphology of brain signals using alpha-stable
+  convolutional sparse coding.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  1099--1108, 2017.
+
+\bibitem{johnson2017stingycd}
+T.~B. Johnson and C.~Guestrin.
+\newblock Stingycd: Safely avoiding wasteful updates in coordinate descent.
+\newblock In {\em International Conference on Machine Learning}, pages
+  1752--1760, 2017.
+
+\bibitem{kavukcuoglu2010learning}
+K.~Kavukcuoglu, P.~Sermanet, Y.-L. Boureau, K.~Gregor, M.~Mathieu, and Y.~L.
+  Cun.
+\newblock Learning convolutional feature hierarchies for visual recognition.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1090--1098, 2010.
+
+\bibitem{pmlr-v80-kerdreux18a}
+T.~Kerdreux, F.~Pedregosa, and A.~d'Aspremont.
+\newblock Frank-{W}olfe with subsampling oracle.
+\newblock In {\em Proceedings of the 35th International Conference on Machine
+  Learning}, pages 2591--2600, 2018.
+
+\bibitem{krizhevsky2012imagenet}
+A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1097--1105, 2012.
+
+\bibitem{lecun1998gradient}
+Y.~LeCun, L.~Bottou, Y.~Bengio, and P.~Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock {\em Proceedings of the IEEE}, 86(11):2278--2324, 1998.
+
+\bibitem{SCSG}
+L.~Lei and M.~I. Jordan.
+\newblock Less than a single pass: Stochastically controlled stochastic
+  gradient.
+\newblock In {\em PMLR: Proceedings of Machine Learning Research (AISTATS
+  2017)}, volume~54, 2017.
+
+\bibitem{liu-2018-first}
+J.~Liu, C.~Garcia-Cardona, B.~Wohlberg, and W.~Yin.
+\newblock First-and second-order methods for online convolutional dictionary
+  learning.
+\newblock {\em SIAM Journal on Imaging Sciences}, 11(2):1589--1628, 2018.
+
+\bibitem{mairal2009online}
+J.~Mairal, F.~Bach, J.~Ponce, and G.~Sapiro.
+\newblock Online dictionary learning for sparse coding.
+\newblock In {\em Proceedings of the 26th annual international conference on
+  machine learning}, pages 689--696. ACM, 2009.
+
+\bibitem{mairal2010online}
+J.~Mairal, F.~Bach, J.~Ponce, and G.~Sapiro.
+\newblock Online learning for matrix factorization and sparse coding.
+\newblock {\em Journal of Machine Learning Research}, 11(Jan):19--60, 2010.
+
+\bibitem{mensch2016dictionary}
+A.~Mensch, J.~Mairal, B.~Thirion, and G.~Varoquaux.
+\newblock Dictionary learning for massive matrix factorization.
+\newblock In {\em International Conference on Machine Learning}, pages
+  1737--1746, 2016.
+
+\bibitem{peter2017sparse}
+S.~Peter, E.~Kirschbaum, M.~Both, L.~Campbell, B.~Harvey, C.~Heins,
+  D.~Durstewitz, F.~Diego, and F.~A. Hamprecht.
+\newblock Sparse convolutional coding for neuronal assembly detection.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  3678--3688, 2017.
+
+\bibitem{reddi2016stochastic}
+S.~J. Reddi, S.~Sra, B.~P{\'o}czos, and A.~Smola.
+\newblock Stochastic frank-wolfe methods for nonconvex optimization.
+\newblock In {\em Communication, Control, and Computing (Allerton), 2016 54th
+  Annual Allerton Conference on}, pages 1244--1251. IEEE, 2016.
+
+\bibitem{PCDM}
+P.~Richt\'{a}rik and M.~Tak\'{a}\v{c}.
+\newblock Parallel coordinate descent methods for big data optimization.
+\newblock {\em Mathematical Programming}, 156(1-2):433--484, 2016.
+
+\bibitem{serrano2016convolutional}
+A.~Serrano, F.~Heide, D.~Gutierrez, G.~Wetzstein, and B.~Masia.
+\newblock Convolutional sparse coding for high dynamic range imaging.
+\newblock In {\em Computer Graphics Forum}, volume~35, pages 153--163. Wiley
+  Online Library, 2016.
+
+\bibitem{shalev2012online}
+S.~Shalev-Shwartz et~al.
+\newblock Online learning and online convex optimization.
+\newblock {\em Foundations and Trends{\textregistered} in Machine Learning},
+  4(2):107--194, 2012.
+
+\bibitem{Takac2013}
+M.~Tak\'{a}\v{c}, A.~Bijral, P.~Richt\'{a}rik, and N.~Srebro.
+\newblock Mini-batch primal and dual methods for svms.
+\newblock {\em In 30th International Conference on Machine Learning},
+  28:537--552, 2013.
+
+\bibitem{wang2018scalable}
+Y.~Wang, Q.~Yao, J.~T. Kwok, and L.~M. Ni.
+\newblock Scalable online convolutional sparse coding.
+\newblock {\em IEEE Transactions on Image Processing}, 2018.
+
+\bibitem{wohlberg2016efficient}
+B.~Wohlberg.
+\newblock Efficient algorithms for convolutional sparse representations.
+\newblock {\em IEEE Transactions on Image Processing}, 25(1):301--315, 2016.
+
+\bibitem{zeiler2010deconvolutional}
+M.~D. Zeiler, D.~Krishnan, G.~W. Taylor, and R.~Fergus.
+\newblock Deconvolutional networks.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2010 IEEE
+  Conference on}, pages 2528--2535. IEEE, 2010.
+
+\end{thebibliography}

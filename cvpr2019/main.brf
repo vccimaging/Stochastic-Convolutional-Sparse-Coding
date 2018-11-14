@@ -1,0 +1,45 @@
+\backcite {jas2017learning,peter2017sparse}{{1}{1}{section.1}}
+\backcite {heide2015fast}{{1}{1}{section.1}}
+\backcite {gu2015convolutional}{{1}{1}{section.1}}
+\backcite {serrano2016convolutional}{{1}{1}{section.1}}
+\backcite {choudhury2017consensus,bibi2017high}{{1}{1}{section.1}}
+\backcite {lecun1998gradient,kavukcuoglu2010learning,krizhevsky2012imagenet}{{1}{1}{section.1}}
+\backcite {zeiler2010deconvolutional}{{1}{1}{section.1}}
+\backcite {boyd2011distributed}{{1}{1}{section.1}}
+\backcite {bristow2013fast,heide2015fast,wohlberg2016efficient,choudhury2017consensus}{{1}{1}{section.1}}
+\backcite {shalev2012online}{{1}{1}{section.1}}
+\backcite {bottou1998online}{{1}{1}{section.1}}
+\backcite {bousquet2008tradeoffs}{{1}{1}{section.1}}
+\backcite {mairal2009online,mairal2010online}{{2}{1}{section.1}}
+\backcite {mensch2016dictionary}{{2}{1}{section.1}}
+\backcite {liu-2018-first}{{2}{1}{section.1}}
+\backcite {wang2018scalable}{{2}{1}{section.1}}
+\backcite {bristow2013fast,heide2015fast,wohlberg2016efficient}{{2}{2}{equation.2.1}}
+\backcite {mensch2016dictionary}{{3}{3.1}{equation.3.4}}
+\backcite {reddi2016stochastic,pmlr-v80-kerdreux18a}{{3}{3.1}{equation.3.4}}
+\backcite {mairal2009online,mairal2010online}{{4}{3.3}{equation.3.6}}
+\backcite {zeiler2010deconvolutional}{{4}{4}{section.4}}
+\backcite {deng2009imagenet}{{4}{4}{section.4}}
+\backcite {zeiler2010deconvolutional,heide2015fast}{{4}{4}{section.4}}
+\backcite {heide2015fast}{{4}{4.1}{subsection.4.1}}
+\backcite {heide2015fast}{{5}{1}{figure.caption.1}}
+\backcite {wohlberg2016efficient}{{5}{4.1}{subsection.4.1}}
+\backcite {heide2015fast}{{5}{4.1}{subsection.4.1}}
+\backcite {heide2015fast}{{5}{4.1}{subsection.4.1}}
+\backcite {heide2015fast}{{6}{\caption@xref {??}{ on input line 47}}{figure.caption.2}}
+\backcite {liu-2018-first}{{6}{4.2}{subsection.4.2}}
+\backcite {liu-2018-first}{{6}{4.2}{figure.caption.4}}
+\backcite {liu-2018-first}{{6}{3}{figure.caption.3}}
+\backcite {liu-2018-first}{{7}{4}{figure.caption.4}}
+\backcite {liu-2018-first}{{7}{4}{figure.caption.4}}
+\backcite {Takac2013, PCDM, SCSG}{{7}{4.2}{figure.caption.4}}
+\backcite {liu-2018-first}{{8}{5}{figure.caption.5}}
+\backcite {johnson2017stingycd}{{8}{5}{section.5}}
+\backcite {ghaoui2012Swfe}{{8}{5}{section.5}}
+\backcite {heide2015fast}{{11}{C}{appendix.C}}
+\backcite {liu-2018-first}{{11}{C}{figure.caption.9}}
+\backcite {liu-2018-first}{{11}{7}{figure.caption.8}}
+\backcite {heide2015fast}{{12}{\caption@xref {??}{ on input line 111}}{figure.caption.9}}
+\backcite {heide2015fast}{{12}{8}{figure.caption.9}}
+\backcite {heide2015fast}{{13}{\caption@xref {??}{ on input line 142}}{figure.caption.10}}
+\backcite {heide2015fast}{{13}{9}{figure.caption.10}}

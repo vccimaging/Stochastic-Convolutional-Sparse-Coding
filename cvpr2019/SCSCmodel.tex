@@ -1,39 +1,56 @@
 \section{Stochastic Convolutional Sparse Coding}
 \subsection{The Model}
-We first define $\code = [\code_1, \dots, \code_K] \in \mathbb{R}^{DK}$.
+We first define a stacked vector $\code = [\code_1, \dots, \code_K]
+\in \mathbb{R}^{DK}$ for the codes, as well as a stacked matrix
+$\Filter = [\Filter_1, \dots, \Filter_K] \in \mathbb{R}^{D \times DK}$
+for the filter convolutions. The convolution operators are expressed
+as a matrix multiplication so that $ \Filter \code = \sum_{k=1}^{K}
+\filter_k * \code_k$.  Therefore, each part of $\Filter$ is a Toeplitz
+matrix.
+
 Based on the strong sparsity of the codes $\code$, we propose to
 implement the CSC learning problem~\eqref{eq:CSCmodel} iteratively,
-where at $\ite$-th iteration we only consider a random subset of the codes, denoted as $\subcode^t$.
-We subsample the sparse codes $\code$ following a Bernoulli distribution with
-probability $p$. Herein, $\subcode^t \in \mathbb{R}^{pDK}$, which satisfies:
+where at the $\ite$-th iteration we only consider a random subset of
+the codes, denoted as $\subcode^t\in \mathbb{R}^{pDK}$.  We subsample
+the sparse codes $\code$ following a Bernoulli distribution with
+probability $p$. This subsampling process can be expressed as a matrix
+operation
 \begin{equation}
     \subcode^t = \mask^{\ite} \code^\ite,
 \end{equation}
-where $\mask^{\ite}$ is a $\mathbb{R}^{pDk \times DK}$ random binary matrix redrawn at current iteration, with $1$s on the entries corresponding to the sampled codes and $0$s elsewhere. Concretely, it projects the codes $\code^\ite$ to a random subspace, retaining the sampled ones and filtering out the others. In the case of $p=1$, the proposed model is identical with the classical CSC model, and $\mask$ is simply an identity matrix. When $p<1$, the algorithm only solves a subset of the codes at chosen positions in each iteration, and accordingly, the update of dictionary $\filter$ is based on the selected
-portion of the codes $\subcode$. Similar to solving the classical CSC problem, we can apply a coordinate descent algorithm, alternating on
-subproblems of $\subcode$ and $\filter$, to tackle the bi-convex optimization problem. Specifically, the modified
-minimization problem for $\subcode$ can be formulated as:
+where $\mask^{\ite}$ is a $\mathbb{R}^{pDk \times DK}$ binary matrix,
+where exactly one entry per row has a value of $1$, and the other
+entries are $0$. For each iteration $\ite$, a different matrix
+$\mask^{\ite}$ is generated randomly. This matrix projects the
+codes $\code^\ite$ to a random subspace, retaining the sampled codes
+and filtering out the others. In the case of $p=1$, the proposed model
+is identical to the classical CSC model, and $\mask$ is simply an
+identity matrix. When $p<1$, the algorithm only solves a subset of the
+codes at chosen positions in each iteration, and accordingly, the
+update of dictionary $\filter$ is based on the selected portion of the
+codes $\subcode$. Similar to solving the classical CSC problem, we can
+apply a coordinate descent algorithm, alternating on subproblems of
+$\subcode$ and $\filter$, to tackle the bi-convex optimization
+problem. Specifically, the modified minimization problem for
+$\subcode$ can be formulated as:
 \begin{equation} \label{eq:updatingCode}
     \subcode^{\ite} = \minimize{\subcode} \frac{1}{2}\| \signal - \Filter^{\ite-1} (\mask^{\ite})^\top \subcode \|_2^2 + \lambda \| \subcode \|_1,
 \end{equation}
-where $\Filter^{\ite-1} = [\Filter_1^{\ite-1}, \dots, \Filter_K^{\ite-1}] \in \mathbb{R}^{D
-  \times DK}$, which is constructed from the dictionary learned by
-$(\ite-1)$-th iteration. The convolution operators are expressed as a matrix
-multiplication so that $ \Filter \code = \sum_{k=1}^{K} \filter_k *
-\code_k$. Therefore, each part of $\Filter$ is a Toeplitz
-matrix. Due to the introduced subsampling matrix, the
-convolution operator cannot be implemented in the Fourier
-domain. However, owing to the subsampling
-strategy, the number of variables that need to be computed for this
-subproblem is $pDK$ instead of $DK$, which leads to a reduction
-of the spatial-domain computation time by a factor of $\frac{1}{p}$.
+where $\Filter^{\ite-1}$ is composed of the dictionary learned in the
+$(\ite-1)$-th iteration.
+ Due to the introduced subsampling matrix, the convolution
+operator cannot be implemented in the Fourier domain. However, owing
+to the subsampling strategy, the number of variables that need to be
+computed for this subproblem is $pDK$ instead of $DK$, which leads to
+a reduction of the spatial-domain computation time by a factor of
+$\frac{1}{p}$.
 
 After computing the subsampled codes $\subcode^\ite$, we can then project them
 onto the original spatial support by
 \begin{equation} \label{eq:upsampleCode}
     \code^\ite = (\mask^{\ite})^\top \subcode^\ite.
 \end{equation}
-Afterwards, the dictionary can be updated by:
+Afterwards, the dictionary can be updated by solving the optimization problem
 \begin{equation} \label{eq:updatingFilter}
 \begin{split}
    & \filter^{\ite} = \minimize{\filter} \frac{1}{2}\|\signal - \Code^{\ite} \filter \|_2^2 \\

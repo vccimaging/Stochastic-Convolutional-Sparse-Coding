@@ -1,0 +1,102 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\input{macro}
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\cvprPaperID{3722} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+\begin{document}
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+\title{Author Response for Stochastic Convolutional Sparse Coding}  % **** Enter the paper title here
+
+\maketitle
+\thispagestyle{empty}
+
+\underline{Reviewer 1}
+
+\textbf{Novelty:}
+It should be emphasized that the proposed method is the first spatial-domain solver for CSC problems that outperforms all the other Fourier-domain solvers in terms of time both in batch mode and online mode. Solving CSC problem in spatial domain brings higher capabilities of handling arbitrary boundary conditions, additional regularization terms (also see response to reviewer 3: \textbf{comparisons}) those can not be handled in fourier domain and multi-layered structures, offering CSC model higher feasibility to wider applications.
+
+\textbf{Algorithm:}
+It is not reasonable to value an algorithm by its complexity, while it should be valued by its effectiveness and efficiency. Easing complicated problems is also a key motivation for conducting researches.
+
+\underline{Reviewer 2}
+
+\textbf{Specific questions:}
+
+1. $\Filter_k \in \mathbb{R}^{D \times D}$ is a Toeplitz matrix for filter $\filter_k \in \mathbb{R}^{M}$, specifically,
+%\begin{equation}\label{toeplitz}
+% \Filter_k =
+% \begin{bmatrix}
+%    \filter_{k,1} \\
+%    \filter_{k,2} & \filter_{k,1}\\
+%    \vdots        & \filter_{k,2} & \filter_{k,1}\\
+%    \filter_{k,M} & \vdots        & \filter_{k,2}\\
+%                  & \filter_{k,M} & \vdots       \\
+%                  &               & \filter_{k,M} & \ddots\\
+%                  &               &               &        & \ddots
+%  \end{bmatrix}
+%\end{equation}
+\begin{equation}\label{toeplitz}
+ \Filter_k =
+ \begin{bmatrix}
+    \filter_{k,1} \\
+    \filter_{k,2} & \filter_{k,1}\\
+    \vdots        & \filter_{k,2}\\
+    \filter_{k,M} & \vdots       \\
+                  & \filter_{k,M} & \ddots\\
+                  &               &        & \ddots          
+  \end{bmatrix}
+\end{equation}
+$\Filter = [\Filter_1, \dots, \Filter_K]$, therefore $\Filter$ has the size of $D \times DK$.
+
+2. Problem (5) is solved according to all the data. For notation simplicity, we omit the notation for data samples. In line 145, we declare the equations are applied to all training samples for batch mode, and in line 351 we emphasize that the equations in online mode only applies to a portion of training samples. We will make this more clear in revised version.
+
+3. For deriving updating rule (8), we can expand equation (7) as:
+\begin{equation}
+    \filter^t = \minimize{\filter} \frac{1}{2t} \filter^{\top} (\sum_{i=1}^{t}{(\Code^i)^{\top}\Code^i})\filter - \filter^{\top} (\sum_{i=1}^{t}{(\Code^i)^{\top}\signal^i})
+\end{equation}
+Let $\surC^t = \frac{1}{t}\sum_{i=1}^{t}{(\Code^i)^{\top}\Code^i}$ and $\surB^t = \frac{1}{t} \sum_{i=1}^{t}{(\Code^i)^{\top}\signal^i}$, then we obtain equation (9), and the updating rule (8) is obvious.
+
+\underline{Reviewer 3}
+
+\textbf{Sparsity:}
+We have demonstrated the sparsity in the figure 4 of supplementary material, which states that on average the codes has $0.18\%$ non-zero elements for 100 filters. It also shows that using over-complete dictionary leads to $8\% - 10\%$ reduction on the non-zero elements and achieves significantly improved representation ability. 
+
+\textbf{Connections:}
+The connections between section 2 and the proposed method can be understood from 2 aspects. The first two points in section 2 contributes to the first motivation. CSC model is an overparameterized model, and the sparsity property of the codes can hardly be exploited if solving the problem in fourier domain. The third point accounts for the second motivation that the dimension size of updating dictionary step is $D$ when solving it in fourier domain, instead of $M$ in spatial domain ($M \ll D$).
+
+\textbf{PSNR:}
+PSNR is the peak signal-to-noise ratio, measuring the difference between the reconstructed signal and the original one. We will explain it in the revised version.
+
+\textbf{Parameter:}
+The parameter sensitivity in CSC model has been extensively studied in Wohlberg et al.. We are not indented to re-report the parameter sensitivity.
+
+\textbf{Comparisons:}
+The comparisons between (3)(Choudhury et al.) and (4)(Degraux et al.) are not applicable because (3) distributes the data to multiple machines to ease the memory issue, while it stills has the heavy computational burden. The proposed single-core program is fair to compare with single-core implementations. (4) formulates the multimodal image reconstruction into the CSC model, and uses the basic coordinate descent algorithm to solve the problem in spatial domain (which are known to have poor runtime performance) because the multimodal image formation model is not convolution based. We emphasize that our proposed strategy can be perfectly aligned with this types of problem and achieve roughly one magnitude speedup (also see response to reviewer 1).
+
+To achieve the final convergence, (2)(Papyan et al.) requires about $1.5 \times$ runtime over the presented fourier-domain solver (Heide et al.), that is to say our proposed SBCSC can run $3 \times$ faster than (2) ((2) needs over 300 iterations to converge while Heide et al. and ours SBCSC need only 12-14 iterations). We will add the convergence comparison with (2) in supplementary. The execution time of ours SOCSC is comparable to the reported results in (1)(Wang et al.), roughly $70-80$ seconds to process 10 images in fruit and city dataset, we will add the comparison in revised version. Notice that (1) runs on GPUs and introduces base filters to represent the original filters, making the problem more complicated. All the discussions will be added.
+
+We emphasize that none of the precedent work represent the importance of the over-complete dictionaries learned in CSC model, and we have shown that they are essential in image reconstruction tasks.
+
+%{\small
+%\bibliographystyle{ieee}
+%\bibliography{egbib}
+%}
+
+\end{document}

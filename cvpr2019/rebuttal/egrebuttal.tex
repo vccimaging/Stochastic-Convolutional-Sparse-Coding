@@ -60,7 +60,7 @@ It is not reasonable to value an algorithm by its complexity, while it should be
     \vdots        & \filter_{k,2}\\
     \filter_{k,M} & \vdots       \\
                   & \filter_{k,M} & \ddots\\
-                  &               &        & \ddots          
+                  &               &        & \ddots
   \end{bmatrix}
 \end{equation}
 $\Filter = [\Filter_1, \dots, \Filter_K]$, therefore $\Filter$ has the size of $D \times DK$.
@@ -76,7 +76,7 @@ Let $\surC^t = \frac{1}{t}\sum_{i=1}^{t}{(\Code^i)^{\top}\Code^i}$ and $\surB^t 
 \underline{Reviewer 3}
 
 \textbf{Sparsity:}
-We have demonstrated the sparsity in the figure 4 of supplementary material, which states that on average the codes has $0.18\%$ non-zero elements for 100 filters. It also shows that using over-complete dictionary leads to $8\% - 10\%$ reduction on the non-zero elements and achieves significantly improved representation ability. 
+We have demonstrated the sparsity in the figure 4 of supplementary material, which states that on average the codes has $0.18\%$ non-zero elements for 100 filters. It also shows that using over-complete dictionary leads to $8\% - 10\%$ reduction on the non-zero elements and achieves significantly improved representation ability.
 
 \textbf{Connections:}
 The connections between section 2 and the proposed method can be understood from 2 aspects. The first two points in section 2 contributes to the first motivation. CSC model is an overparameterized model, and the sparsity property of the codes can hardly be exploited if solving the problem in fourier domain. The third point accounts for the second motivation that the dimension size of updating dictionary step is $D$ when solving it in fourier domain, instead of $M$ in spatial domain ($M \ll D$).
@@ -90,7 +90,7 @@ The parameter sensitivity in CSC model has been extensively studied in Wohlberg 
 \textbf{Comparisons:}
 The comparisons between (3)(Choudhury et al.) and (4)(Degraux et al.) are not applicable because (3) distributes the data to multiple machines to ease the memory issue, while it stills has the heavy computational burden. The proposed single-core program is fair to compare with single-core implementations. (4) formulates the multimodal image reconstruction into the CSC model, and uses the basic coordinate descent algorithm to solve the problem in spatial domain (which are known to have poor runtime performance) because the multimodal image formation model is not convolution based. We emphasize that our proposed strategy can be perfectly aligned with this types of problem and achieve roughly one magnitude speedup (also see response to reviewer 1).
 
-To achieve the final convergence, (2)(Papyan et al.) requires about $1.5 \times$ runtime over the presented fourier-domain solver (Heide et al.), that is to say our proposed SBCSC can run $3 \times$ faster than (2) ((2) needs over 300 iterations to converge while Heide et al. and ours SBCSC need only 12-14 iterations). We will add the convergence comparison with (2) in supplementary. The execution time of ours SOCSC is comparable to the reported results in (1)(Wang et al.), roughly $70-80$ seconds to process 10 images in fruit and city dataset, we will add the comparison in revised version. Notice that (1) runs on GPUs and introduces base filters to represent the original filters, making the problem more complicated. All the discussions will be added.
+To achieve the final convergence, (2)(Papyan et al.) requires about $1.5 \times$ runtime over the presented fourier-domain solver (Heide et al.), that is to say our proposed SBCSC can run $3 \times$ faster than (2) ((2) needs over 300 iterations to converge while Heide et al. and ours SBCSC need only 12-14 iterations). The execution time of ours SOCSC is comparable to the reported results in (1)(Wang et al.), roughly $70-80$ seconds to process 10 images in fruit and city dataset, we will add the comparison in revised version. Notice that (1) runs on GPUs and introduces base filters to represent the original filters, making the problem more complicated. These additional comparisons affirm the superiority of the proposed method. All the comparisons and discussions will be added.
 
 We emphasize that none of the precedent work represent the importance of the over-complete dictionaries learned in CSC model, and we have shown that they are essential in image reconstruction tasks.
 

@@ -1,0 +1,225 @@
+% ---------------------------------------------------------------------------
+% Author guideline and sample document for EG publication using LaTeX2e input
+% D.Fellner, v1.15, Dec 14, 2018
+
+\documentclass{egpubl}
+\usepackage{EGVMV19}
+
+% --- for  Annual CONFERENCE
+% \ConferenceSubmission   % uncomment for Conference submission
+% \ConferencePaper        % uncomment for (final) Conference Paper
+% \STAR                   % uncomment for STAR contribution
+% \Tutorial               % uncomment for Tutorial contribution
+% \ShortPresentation      % uncomment for (final) Short Conference Presentation
+% \Areas                  % uncomment for Areas contribution
+% \MedicalPrize           % uncomment for Medical Prize contribution
+% \Education              % uncomment for Education contribution
+% \Poster                 % uncomment for Poster contribution
+% \DC                     % uncomment for Doctoral Consortium
+%
+% --- for  CGF Journal
+% \JournalSubmission    % uncomment for submission to Computer Graphics Forum
+% \JournalPaper         % uncomment for final version of Journal Paper
+%
+% --- for  CGF Journal: special issue
+% \SpecialIssueSubmission    % uncomment for submission to , special issue
+% \SpecialIssuePaper         % uncomment for final version of Computer Graphics Forum, special issue
+%                          % EuroVis, SGP, Rendering, PG
+% --- for  EG Workshop Proceedings
+\WsSubmission      % uncomment for submission to EG Workshop
+%\WsPaper           % uncomment for final version of EG Workshop contribution
+% \WsSubmissionJoint % for joint events, for example ICAT-EGVE
+% \WsPaperJoint      % for joint events, for example ICAT-EGVE
+% \Expressive        % for SBIM, CAe, NPAR
+% \DigitalHeritagePaper
+% \PaperL2P          % for events EG only asks for License to Publish
+
+% --- for EuroVis
+% for full papers use \SpecialIssuePaper
+% \STAREurovis   % for EuroVis additional material
+% \EuroVisPoster % for EuroVis additional material
+% \EuroVisShort  % for EuroVis additional material
+
+% !! *please* don't change anything above
+% !! unless you REALLY know what you are doing
+% ------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{dfadobe}
+
+\usepackage{cite}  % comment out for biblatex with backend=biber
+% ---------------------------
+%\biberVersion
+\BibtexOrBiblatex
+%\usepackage[backend=biber,bibstyle=EG,citestyle=alphabetic,backref=true]{biblatex}
+%\addbibresource{egbibsample.bib}
+% ---------------------------
+\electronicVersion
+\PrintedOrElectronic
+% for including postscript figures
+% mind: package option 'draft' will replace PS figure by a filename within a frame
+\ifpdf \usepackage[pdftex]{graphicx} \pdfcompresslevel=9
+\else \usepackage[dvips]{graphicx} \fi
+
+\usepackage{egweblnk}
+
+
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+
+\usepackage{caption}
+\captionsetup[table]{position=bottom}
+
+\usepackage{array}
+\usepackage{epstopdf}
+\usepackage{cuted}
+\input{macro}
+% ---------------------------------------------------------------------
+% end of prologue
+
+% EG author guidelines plus sample file for EG publication using LaTeX2e input
+% D.Fellner, v2.03, Dec 14, 2018
+
+
+\title{Stochastic Convolutional Sparse Coding}
+
+% for anonymous conference submission please enter your SUBMISSION ID
+% instead of the author's name (and leave the affiliation blank) !!
+% for final version: please provide your *own* ORCID in the brackets following \orcid; see https://orcid.org/ for more details.
+\author{Submission ID: 1010}
+%\author[J. Xiong \& P. Richtarik \& W. Heidrich]
+%{\parbox{\textwidth}{\centering J. Xiong\orcid{0000-0002-1507-6070},
+%		P. Richtarik\orcid{}
+%		and W. Heidrich\orcid{}
+ %       S. Spencer$^2$\thanks{Chairman Siggraph Publications Board}
+%       }
+%        \\
+%% For Computer Graphics Forum: Please use the abbreviation of your first name.
+%{\parbox{\textwidth}{\centering King Abdullah University of Science and Technology (KAUST), Saudi Arabia
+%%        $^2$ Another Department to illustrate the use in papers from authors
+%%             with different affiliations
+%       }
+%}
+%}
+% ------------------------------------------------------------------------
+
+% if the Editors-in-Chief have given you the data, you may uncomment
+% the following five lines and insert it here
+%
+% \volume{36}   % the volume in which the issue will be published;
+% \issue{1}     % the issue number of the publication
+% \pStartPage{1}      % set starting page
+
+
+%-------------------------------------------------------------------------
+\begin{document}
+\begin{titlepage} 
+\part*{Cover Letter: Author Response for Stochastic Convolutional Sparse Coding}
+
+We would like to thank the reviewers for the detailed feedback, and are excited to see that our work is overall seen positively.
+
+\begin{itemize}
+\item Unclear and unspecific definitions and names: we have adjusted these as the reviewers suggest.
+
+\item The selection of alternative candidates: For the batch-based algorithm comparison, Heide et al. is chosen because the required number of iterations to achieve convergence is comparable to ours (10-12 iterations), while the other approaches require hundreds of iterations. Even though their per iteration cost is less, the total runtime is longer than the chosen method. (we have the comparison regarding convergence with respect to both of the time and iterations)
+
+For the online-based comparison, both of the implementations of Liu et al. and ours use Matlab built-in functions only, while the others invoke c++ pre-complied functions for computing efficiency, which affects a fair comparison. All these are revealed in the manuscript.
+
+\item Nested chart in Figure 1: For the top one: nested charts are used because the information of the first few iterations is missed in the main figure.  For the bottom one: it shows a zoom-in view to deliver a better representation about the convergence with respect to time.
+
+\item Colored shapes: Considering not everyone has the access to the colored printer, representing the curves in different shapes makes the information still visible in black and white versions.
+
+\item Conclusion: the conclusion part has been shorten.
+
+\item The linguistic and reference errors have been corrected.
+\end{itemize}
+
+\end{titlepage}
+% uncomment for using teaser
+% \teaser{
+%  \includegraphics[width=\linewidth]{eg_new}
+%  \centering
+%   \caption{New EG Logo}
+% \label{fig:teaser}
+%}
+
+\maketitle
+%-------------------------------------------------------------------------
+\begin{abstract}
+  State-of-the-art methods for Convolutional Sparse Coding usually
+  employ Fourier-domain solvers in order to speed up the convolution
+  operators. However, this approach is not without shortcomings. For
+  example, Fourier-domain representations implicitly assume circular
+  boundary conditions and make it hard to fully exploit the sparsity
+  of the problem as well as the small spatial support of the filters.
+  
+  In this work, we propose a novel stochastic spatial-domain solver,
+  in which a randomized subsampling strategy is introduced during the
+  learning sparse codes. Afterwards, we extend the proposed strategy
+  in conjunction with online learning, scaling the CSC model up to
+  very large sample sizes. In both cases, we show experimentally that
+  the proposed subsampling strategy, with a reasonable selection of
+  the subsampling rate, outperforms the state-of-the-art
+  frequency-domain solvers in terms of execution time without losing
+  the learning quality. Finally, we evaluate the effectiveness of the
+  over-complete dictionary learned from large-scale datasets, which demonstrates an
+  improved sparse representation of the natural images on account of
+  more abundant learned image features.
+%-------------------------------------------------------------------------
+%  ACM CCS 1998
+%  (see https://www.acm.org/publications/computing-classification-system/1998)
+% \begin{classification} % according to https://www.acm.org/publications/computing-classification-system/1998
+% \CCScat{Computer Graphics}{I.3.3}{Picture/Image Generation}{Line and curve generation}
+% \end{classification}
+%-------------------------------------------------------------------------
+%  ACM CCS 2012
+%   (see https://www.acm.org/publications/class-2012)
+%The tool at \url{http://dl.acm.org/ccs.cfm} can be used to generate
+% CCS codes.
+%Example:
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10010147.10010178.10010224.10010240.10010241</concept_id>
+<concept_desc>Computing methodologies~Image representations</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10003752.10003809.10010047.10010048</concept_id>
+<concept_desc>Theory of computation~Online learning algorithms</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Computing methodologies~Image representations}
+\ccsdesc[100]{Theory of computation~Online learning algorithms}
+
+
+\printccsdesc
+\end{abstract}  
+
+\input{Introduction}
+
+\input{CSCmodel}
+
+\input{SCSCmodel}
+
+\input{Results}
+
+\input{Conclusion}
+
+
+% bibtex
+\bibliographystyle{eg-alpha-doi}
+\bibliography{egbib}   
+
+\end{document}

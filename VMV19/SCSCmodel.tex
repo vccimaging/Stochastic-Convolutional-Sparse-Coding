@@ -1,0 +1,251 @@
+\section{Stochastic Convolutional Sparse Coding}
+\subsection{The SCSC Model}
+We first define a stacked vector $\code = [\code_1, \dots, \code_K]
+\in \mathbb{R}^{DK}$ for the codes, as well as a stacked matrix
+$\Filter = [\Filter_1, \dots, \Filter_K] \in \mathbb{R}^{D \times DK}$
+for the filter convolutions. The convolution operators are expressed
+as a matrix multiplication so that $ \Filter \code = \sum_{k=1}^{K}
+\filter_k * \code_k$.  Therefore, each part of $\Filter$ is a Toeplitz
+matrix.
+
+Based on the strong sparsity of the codes $\code$, we propose to
+implement the CSC learning problem~\eqref{eq:CSCmodel} iteratively,
+where at the $\ite$-th iteration we only consider a random subset of
+the codes, denoted as $\subcode^t\in \mathbb{R}^{pDK}$.  We subsample
+the sparse codes $\code$ following a Bernoulli distribution with
+probability $p$. This subsampling process can be expressed as a matrix
+operation
+\begin{equation}
+    \subcode^t = \mask^{\ite} \code^\ite,
+\end{equation}
+where $\mask^{\ite}$ is a $\mathbb{R}^{pDk \times DK}$ binary matrix,
+where exactly one entry per row has a value of $1$, and the other
+entries are $0$. For each iteration $\ite$, a different matrix
+$\mask^{\ite}$ is generated randomly. This matrix projects the
+codes $\code^\ite$ to a random subspace, retaining the sampled codes
+and filtering out the others. In the case of $p=1$, the proposed model
+is identical to the classical CSC model, and $\mask$ is simply an
+identity matrix. When $p<1$, the algorithm only solves a subset of the
+codes at chosen positions in each iteration, and accordingly, the
+update of dictionary $\filter$ is based on the selected portion of the
+codes $\subcode$. Similar to solving the classical CSC problem, we can
+apply a coordinate descent algorithm, alternating on subproblems of
+$\subcode$ and $\filter$, to tackle the bi-convex optimization
+problem. Specifically, the modified minimization problem for
+$\subcode$ can be formulated as:
+\begin{equation} \label{eq:updatingCode}
+    \subcode^{\ite} = \minimize{\subcode} \frac{1}{2}\| \signal - \Filter^{\ite-1} (\mask^{\ite})^\top \subcode \|_2^2 + \lambda \| \subcode \|_1,
+\end{equation}
+where $\Filter^{\ite-1}$ is composed of the dictionary learned in the
+$(\ite-1)$-th iteration.
+ Due to the introduced subsampling matrix, the convolution
+operator cannot be implemented in the Fourier domain. However, owing
+to the subsampling strategy, the number of variables that need to be
+computed for this subproblem is $pDK$ instead of $DK$, which leads to
+a reduction of the spatial-domain computation time by a factor of
+$\frac{1}{p}$.
+
+After computing the subsampled codes $\subcode^\ite$, we can then project them
+onto the original spatial support by
+\begin{equation} \label{eq:upsampleCode}
+    \code^\ite = (\mask^{\ite})^\top \subcode^\ite.
+\end{equation}
+Afterwards, the dictionary can be updated by solving the optimization problem
+\begin{equation} \label{eq:updatingFilter}
+\begin{split}
+   & \filter^{\ite} = \minimize{\filter} \frac{1}{2}\|\signal - \Code^{\ite} \filter \|_2^2 \\
+   & \text{subject to}  ~ \|\filter_k\|^2_2 \leq 1 ~ \forall k \in \{1,\dots,K\},
+\end{split}
+\end{equation}
+where $\Code^{\ite}= [\Code_1^{\ite}, \dots, \Code_K^{\ite}]
+\in \mathbb{R}^{D \times MK}$ is a concatenation of Toeplitz matrices,
+and $\Code_k^{\ite}$ is constructed from the associated $\code_k^{\ite}$, $\filter=
+[\filter_1,\dots,\filter_K] \in \mathbb{R}^{MK}$ such that $ \Code
+\filter = \sum_{k=1}^{K} \filter_k * \code_k$. In typical CSC
+settings, $M \ll D$, hence there is no need to perform subsampling on
+the dictionary. Notice that the time complexity of solving the $\filter$-update 
+step in spatial domain is dependent of $M$, in contrast with that of frequency-domain 
+solvers, which is $D$ dependent. This addresses the third issue in Section~\ref{CSCmodel}.
+
+%The work of~\cite{mensch2016dictionary} also applies a so-called
+%stochastic subsampling strategy for dictionary learning, where the
+%subsampling is randomly performed on the observed signals, differing
+%from that of our proposed. In addition, it is basically applied for
+%factorizing matrix that is large in both dimensions. Although CSC can
+%be expressed in a similar mathematical formula as matrix factorization, the two
+%problems are in practice quite different due to the convolutional
+%property of the CSC model.
+\changed{Our proposed randomization approach shares a similar idea as utilized in the stochastic Frank-Wolfe
+algorithm~\cite{reddi2016stochastic,pmlr-v80-kerdreux18a}.  The general idea of that is to solve the optimization problem on a subset of the variables at each iteration, which are
+randomly extracted based on a certain probability distribution.} For the proposed algorithm, each iteration extracts
+($pDK+MK$) variables, where $pDK$ variables are randomly picked from a
+total $DK$ variables, and the rest remain unchanged. Owing to the fact
+that CSC model is \changed{over-parameterized} and the codes are highly 
+sparse, the original signals can still be represented by a portion of 
+the codes under a reasonable subsampling
+rate. Therefore, the convergence of the proposed algorithm will not be
+significantly affected by the subsampling manipulation, unlike the
+general case of the stochastic Frank-Wolfe algorithm, which usually
+requires more iterations to reach convergence. This insight is
+experimentally verified in Section~\ref{sec:result}.
+
+In the following we introduce two different outer loop structures to
+utilize the proposed subsampling strategy. First, we introduce a {\em
+  batch mode} method (stochastic batch CSC) that learns from all
+images simultaneously, and second we introduce an {\em online}
+variant (stochastic online CSC).
+
+\subsection{Stochastic Batch CSC (SBCSC)}
+We first introduce a batch-mode version of the proposed method as
+shown in Algorithm~\ref{algo:SBCSC}, where $N$ is the number of total
+input images, $(\subcode^i)^{\ite}$ is the sampled codes associated with $i$-th
+image at $\ite$-th iteration and $(\code^i)^{\ite}$ is the corresponding codes in the original spatial support, $p$ is the uniform probability for one code been
+selected. We choose $p=\{1, 0.5, 0.2, 0.1, 0.05\}$ for testing in this
+work, where $p=1$ indicates no subsampling, and $p=0.05$ indicates a
+subsampling rate of $5\%$.
+
+\begin{algorithm}[H]
+\caption{SBCSC} \label{algo:SBCSC}
+\begin{algorithmic}[1]
+\State $\text{Initialize}  ~ \ite=0, ~\filter^t, ~p$
+\While {not converge}
+    \State $\ite \gets \ite+1$
+    \State $ \text{Randomly sample }\code^{\ite} \text{ with rate } p $
+    \For{i=1 to N}
+        \State $ \text{Compute } (\subcode^i)^{\ite} \text{ by solving problem~(\ref{eq:updatingCode}})$
+        \State $ \text{Compute } (\code^i)^{\ite}   \text{ by Eq.~\ref{eq:upsampleCode}}$
+    \EndFor
+    \State $\text{Compute } \filter^{\ite} \text{ by solving problem~(\ref{eq:updatingFilter}})$
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+Problem~\eqref{eq:updatingCode} is the standard LASSO, which can be
+solved by plenty of optimization frameworks. We found that solving it
+with ADMM delivers a good balance between computation time and
+convergence within a moderate number of iterations. Specifically, the
+data fitting term and the $L_1$ penalty term are split, forming two
+separate substeps. The first substep is a quadratic programming (QP)
+problem, and we can either cache the matrix factorization by Cholesky
+decomposition (when $N$ is relatively large), or solve it iteratively
+by Conjugate Gradient (when $N$ is relatively small). The second
+substep can be solved by a point-wise shrinkage operation.
+%The above two substeps alternatively solved within the ADMM
+%iterations.
+Problem~\eqref{eq:updatingFilter} is a quadratic constrained
+quadratic programming (QCQP) problem, and it can be efficiently solved
+by projected block coordinate decent. Empirically, a single iteration
+is enough with $\filter$ computed in previous iteration as a warm
+start. We set the \changed{hyper-parameters} $\lambda=1$, the ADMM iteration
+fixed to 10, the augmented Lagrangian penalty $\rho$ to $10 \lambda$,
+and the over-relaxation strategy within ADMM is applied with $\alpha =
+1.8$. For a detailed description of the above two solvers, please
+refer to the supplement.
+
+Every outer loop of SBCSC involves all of the training images, which
+makes it computationally expensive to process them all simultaneously.
+Furthermore, memory consumption quickly becomes an issue with
+increasing numbers of images. Thus, the batch-based learning algorithm
+lacks the ability to scale up to very large datasets or to handle
+dynamically changing training data.
+
+
+\subsection{Stochastic Online CSC (SOCSC)}
+
+\begin{algorithm}[H]
+\caption{SOCSC} \label{algo:SOCSC}
+\begin{algorithmic}[1]
+\State $\text{Initialize} ~ t=0, ~\filter^t, ~p, ~\surC^t = 0, ~\surB^t = 0$
+\While {not converge}
+    \State $t \gets t+1$
+    \State $ \text{draw } \signal^t \text{ from training images} $
+    \State $ \text{Randomly sample }\code^t \text{ with rate } p $
+    \State $ \text{Compute } \subcode^t \text{ by solving problem~(\ref{eq:updatingCodeOnline}) using } \filter^{t-1}$
+    \State Compute $\code^t$ by Eq.~\ref{eq:upsampleCode}
+    \State Compute $\surC^t$ and $\surB^t$ by Eq.~\ref{eq:updateSur}
+    \State Compute $\filter^t$ by solving problem~(\ref{eq:updatingFilterOnline})
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+In order to address this scalability issue, we can tackle the
+Stochastic CSC problem in an online fashion. In the online learning
+setting as shown in Algorithm~\ref{algo:SOCSC}, each iteration only
+draws one or a subset (mini-batch) of the total training images, hence
+the complexity per loop is independent of the training sample
+size. Then, given the sampled image $\signal^t$ at $t$-th iteration,
+we can compute the corresponding subsampled sparse codes $\subcode^t$ by
+\begin{equation} \label{eq:updatingCodeOnline}
+    \subcode^t = \minimize{\subcode} \frac{1}{2}\|\signal^t - \Filter^{t-1} (\mask^t)^\top \subcode \|_2^2 + \lambda \|\subcode\|_1.
+\end{equation}
+The only difference between Eq. ~\ref{eq:updatingCode} is that $\signal^t$ only contains a portion of the total images. After projecting $\subcode^t$ onto the original spatial support and obtaining the sparse codes $\code^t$, the dictionary is updated by:
+\begin{equation}
+\begin{split}
+    &\filter^t = \minimize{\filter} \frac{1}{2t}\sum_{i=1}^{t} \|\signal^i - \Code^i \filter \|_2^2 \\
+    &\text{subject to} \quad \|\filter_k\|^2_2 \leq 1 ~ \forall k \in \{1,\dots,K\}.
+\end{split}
+\end{equation}
+Note that updating the dictionary in this fashion involves all of the
+past training images and sparse codes. Using techniques developed for
+regular (non-convolutional) dictionary
+learning~\cite{mairal2009online,mairal2010online}, we can get rid of
+explicitly storing this data by introducing two surrogate matrices
+$\surC \in \mathbb{R}^{KM \times KM}$ and $\surB \in \mathbb{R}^{KM
+  \times 1}$. These carry all of the required information for updating
+$\filter$, and can be iteratively updated by:
+\begin{equation} \label{eq:updateSur}
+\begin{split}
+    \surC^t  = \frac{t-1}{t} \surC^{t-1} + \frac{1}{t}(\Code^t)^\top \Code^t \\
+    \surB^t  = \frac{t-1}{t} \surB^{t-1} + \frac{1}{t}(\Code^t)^\top \signal^t
+\end{split}
+\end{equation}
+With these surrogate matrices, the updated dictionary can be obtained
+by solving
+\begin{equation} \label{eq:updatingFilterOnline}
+\begin{split}
+    & \filter^t = \minimize{\filter} \frac{1}{2} \filter^\top \surC^t\filter - \filter^\top \surB^t \\& \text{subject to} \quad \|\filter_k\|_2^2 \leq 1 ~ \forall k \in \{1,\dots,K\}.
+\end{split}
+\end{equation}
+Problem~\eqref{eq:updatingCodeOnline} and
+problem~\eqref{eq:updatingFilterOnline} are solved in the same way as
+that for SBCSC.
+
+\subsection{Complexity Analysis}\label{complexity}
+Recall that $D$ is the number of pixels for a single image, $K$ is the
+number of filters, and $M$ is the size of the filter
+support. Commonly, we can assume $K \approx M$.  State-of-the-art
+frequency-domain solvers then have the time complexity
+$\mathcal{O}(K^2D + KDlog(D))$ for a single data pass.
+
+The time complexity of updating $\code$ in our SBCSC algorithm using
+Conjugate Gradient is $\mathcal{O}(pKMD \sqrt{\tau})$, where $pKMD$ is
+the number of non-zero elements in $(\Filter \mask^\top)$ and $\tau$
+is the condition number of $(\matA^\top \matA + \rho I)$ where $\matA
+= \Filter \mask^\top$. With a reasonable selection of the subsampling
+rate, this time complexity is comparable to that of frequency-domain
+solvers.
+
+Updating the filters $\filter$ takes $\mathcal{O}(K^2M^2)$ time. This
+is comparable to $\mathcal{O}(K^2D)$ in the common CSC setting ($M \ll
+D$). However, multiple ADMM iterations are required in the frequency
+domain to compute $\filter$ while only a single pass is required by
+the proposed method, which greatly reduces the computation
+time. Overall, the proposed method has the time complexity of
+$\mathcal{O}(pKMD \sqrt{\tau} + K^2M^2)$.
+
+The time complexity of SOCSC for one data pass is similar to that of SBCSC, apart from
+two additional steps to update the surrogate matrices. Updating
+$\surC$ and $\surB$ involves computing $\Code^\top\Code$ and
+$\Code^\top x$. Although $\Code$ has dimensions of $D \times KM$, it
+is a highly sparse matrix with only $\mathcal{O}(D)$ non-zero
+elements. Therefore, the total performance is not affected
+significantly.
+
+
+% --- DO NOT DELETE ---
+% Local Variables:
+% mode: latex
+% mode: flyspell
+% mode: TeX-PDF
+% End:
+

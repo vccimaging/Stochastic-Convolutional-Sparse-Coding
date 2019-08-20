@@ -75,8 +75,8 @@ solvers, which is $D$ dependent. This addresses the third issue in Section~\ref{
 %be expressed in a similar mathematical formula as matrix factorization, the two
 %problems are in practice quite different due to the convolutional
 %property of the CSC model.
-\changed{Our proposed randomization approach shares a similar idea as utilized in the stochastic Frank-Wolfe
-algorithm~\cite{reddi2016stochastic,pmlr-v80-kerdreux18a}.  The general idea of that is to solve the optimization problem on a subset of the variables at each iteration, which are
+\changed{Our proposed randomization approach utilizes ideas similar to the stochastic Frank-Wolfe
+algorithm~\cite{reddi2016stochastic,pmlr-v80-kerdreux18a}.  The general idea is to solve the optimization problem on a subset of the variables at each iteration, which are
 randomly extracted based on a certain probability distribution.} For the proposed algorithm, each iteration extracts
 ($pDK+MK$) variables, where $pDK$ variables are randomly picked from a
 total $DK$ variables, and the rest remain unchanged. Owing to the fact

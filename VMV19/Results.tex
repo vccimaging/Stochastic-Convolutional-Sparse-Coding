@@ -2,7 +2,7 @@
 
 \changed{ \subsection{Experimental Design}
 We first validate the proposed algorithms on the fruit and city
-datasets~\cite{zeiler2010deconvolutional}, where each consists of 10
+datasets~\cite{zeiler2010deconvolutional}, that each consist of 10
 training images of size $100 \times 100$. The online-mode algorithms
 are then adapted to one thousand $100 \times 100$ image patches
 randomly picked up from ImageNet~\cite{deng2009imagenet}. Note that batch-based CSC commonly can only handle less than 100 images
@@ -35,7 +35,7 @@ images~\cite{zeiler2010deconvolutional,heide2015fast}.}
 {\bfseries Convergence.} Comparisons of the convergence between the
 proposed method (SBCSC) and the state-of-the-art batch-mode
 algorithm~\cite{heide2015fast} are shown in
-Fig.~\ref{fig:subsampleResult} \changed{(the compared method uses a similar number of iterations as ours to reach convergence)}. A different selection of the
+Fig.~\ref{fig:subsampleResult} \changed{(the comparison method uses a similar number of iterations as ours to reach convergence)}. A different selection of the
 subsampling rate reveals that the proposed strategy will slightly
 influence the convergence and the training objective of the
 minimization problem. Specifically, the more subsampled, the
